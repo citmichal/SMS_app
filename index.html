@@ -26,10 +26,10 @@
     phoneNumber: "510189591",
     textMessage: "Testing"
 }
-
-//if (typeof sms === 'undefined' || typeof sms.sendMessage !== 'function') {
-//    alert("No plugin");
-//}
+alert("No plugin");
+if (typeof sms === 'undefined' || typeof sms.sendMessage !== 'function') {
+    alert("No plugin");
+}
 sms.sendMessage(mymsg, function(message) {
     console.log("success: " + message);
     alert("Sent");
