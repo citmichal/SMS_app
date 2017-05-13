@@ -22,27 +22,21 @@
       
       </head>
       <script type="text/javascript">
-         var app = {
-		sendSms: function() {
-        var number = document.getElementById('numberTxt').value;
-        var message = document.getElementById('messageTxt').value;
-        alert(number);
-        alert(message);
+        var mymsg = {
+    phoneNumber: "510189591",
+    textMessage: "Testing"
+}
 
-        //CONFIGURATION
-        var options = {
-            replaceLineBreaks: false, // true to replace \n by a new line, false by default
-            android: {
-                intent: ''  // send SMS with the native android SMS messaging
-                //intent: '' // send SMS without open any other app
-            }
-        };
-
-        var success = function () { alert('Message sent successfully'); };
-        var error = function (e) { alert('Message Failed:' + e); };
-        sms.send(number, message, options, success, error);
-    }
-};
+if (typeof sms === 'undefined' || typeof sms.sendMessage !== 'function') {
+    alert("No plugin");
+}
+sms.sendMessage(mymsg, function(message) {
+    console.log("success: " + message);
+    alert("Sent");
+}, function(error) {
+    console.log("code: " + error.code + ", message: " + error.message);
+    alert("Error sending");
+});
                    
       </script>
 <input id="numberTxt" placeholder="Enter mobile number" value="" type="tel" />
