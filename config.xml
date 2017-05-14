@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
     <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-		id          = "SMS"
+		id          = "GUi"
         version     = "1.0.0" >
 
+<<<<<<< HEAD
     <name>GUI</name>	
+=======
+    <name>GUI</name>
+>>>>>>> parent of 100366a... a
     <description>The graphical user interface (GUI), is a type of user interface that allows users to interact with electronic
 devices through graphical icons and visual indicators such as secondary notation, instead of text-based user
 interfaces, typed command labels or text navigation. GUIs were introduced in reaction to the perceived steep
