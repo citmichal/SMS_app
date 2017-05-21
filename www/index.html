@@ -52,6 +52,8 @@
 						localStorage.setItem(data.address + 'dmq1', rsa.dmq1.toString(16));
 						localStorage.setItem(data.address + 'coeff', rsa.coeff.toString(16));
 						alert(localStorage.getItem(data.address + 'n'));
+						if(SMS) SMS.sendSMS(data.address, 'InitN:'+localStorage.getItem(data.address + 'n'), function(){}, function(){});
+						if(SMS) SMS.sendSMS(data.address, 'InitE:'+localStorage.getItem(data.address + 'e'), function(){}, function(){});
 					}
 					alert('po IF');
 							
@@ -61,6 +63,16 @@
 					var rsa = new RSAKey;
 					rsa.setPrivateEx(localStorage.getItem(data.address + 'n'), localStorage.getItem(data.address + 'e'), localStorage.getItem(data.address + 'd'), localStorage.getItem(data.address + 'p'), localStorage.getItem(data.address + 'q'), localStorage.getItem(data.address + 'dmp1'), localStorage.getItem(data.address + 'dmq1'), localStorage.getItem(data.address + 'coeff'));
 					alert('Wiadomosc od: '+data.address+', tresc: '+rsa.decrypt(data.body));
+					alert('gotowe')
+				}
+				if(data.body.substring(0,6) == 'InitN') {
+				alert('akcja: otrzymano N\n'+ data.address + 'nPub' + '\n' data.body.slice(6));
+					localStorage.setItem(data.address + 'nPub', data.body.slice(6));
+					alert('gotowe')
+				}
+				if(data.body.substring(0,6) == 'InitE') {
+				alert('akcja: otrzymano E\n'+ data.address + 'ePub' + '\n' data.body.slice(6));
+					localStorage.setItem(data.address + 'ePub', data.body.slice(6));
 					alert('gotowe')
 				}
 				if(data.body.substring(0,7) == 'Delete') {
@@ -73,6 +85,8 @@
 					localStorage.removeItem(data.address + 'dmp1'),
 					localStorage.removeItem(data.address + 'dmq1'),
 					localStorage.removeItem(data.address + 'coeff');
+					localStorage.removeItem(data.address + 'nPub'), 
+					localStorage.removeItem(data.address + 'ePub'), 
 					alert('Skasowane');
 				} 
 				
@@ -101,6 +115,13 @@
          
         function wyslijZaproszenie() {
         	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'InitSecure', function(){}, function(str){alert(str);});
+        }
+			function wyslijZaszyfrowane() {
+			var rsa = new RSAKey;
+			rsa.setPublic(getItem($('input#rozmowca').val().trim() + 'nPub'), getItem($('input#rozmowca').val().trim() + 'ePub'));
+			alert('szyfrujemy:\n'+getItem($('input#rozmowca').val().trim() + 'nPub') + '\n' + getItem($('input#rozmowca').val().trim() + 'ePub'));
+			var zaszyfrowane = rsa.encrypt($('input#wiadomosc').val().trim());
+        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), zaszyfrowane, function(){}, function(str){alert(str);});
         }
 		function wyslijKasowanie() {
         	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'Delete', function(){}, function(str){alert(str);});
@@ -193,9 +214,11 @@
         <div id="fullpage">
             <p>Demo for SMS Plugin</p>
 
-			To:<input type="text" size=16 value='510189591' id="rozmowca"/><br/>
+			To:<input type="number" size=16 value='+48510189591' id="rozmowca"/><br/>
+			To:<input type="text" size=50 value='test' id="wiadomosc"/><br/>
 			<button onclick="wyslijZaproszenie();">Zapos do konwersacji</button>
 			<button onclick="wyslijKasowanie();">Skasuj klucze</button>
+			<button onclick="wyslijZaszyfrowane();">Wyslij zaszyfrowane</button>
             <hr/>
             <button onclick="listSMS();">List Inboxx (recent 10)</button>
             <hr/>
