@@ -169,8 +169,14 @@
         		if(Array.isArray(data)) {
         			for(var i in data) {
         				var sms = data[i];
+						if (sms.body.substring(0,10) == 'SecureMsg:') {
         				smsList.push(sms);
-        				html += sms.address + ": " + sms.body + "<br/>";
+							var rsa = new RSAKey;
+							//wczytaj klucze szyfrowania z local storage
+							rsa.setPrivateEx(localStorage.getItem(sms.address + 'n'), localStorage.getItem(sms.address + 'e'), localStorage.getItem(sms.address + 'd'), localStorage.getItem(sms.address + 'p'), localStorage.getItem(sms.address + 'q'), localStorage.getItem(sms.address + 'dmp1'), localStorage.getItem(sms.address + 'dmq1'), localStorage.getItem(sms.address + 'coeff'));
+							
+        				html += sms.address + ": " + "<br/>  " + rsa.decrypt(sms.body.slice(10)) + "<br/>";
+						}
         			}
         		}
         		updateData( html );
