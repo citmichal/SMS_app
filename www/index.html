@@ -113,35 +113,35 @@
         }
         //funkcja wysyla polecenie utworzenia kluczy prywatnych i publicznych oraz odeslania publicznych
         function wyslijZaproszenie() {
-        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'InitSecure', function(){}, function(str){alert(str);});
+        	if(SMS) SMS.sendSMS($('input#rozmowcaNowa').val().trim(), 'InitSecure', function(){}, function(str){alert(str);});
         }
 		//funkcja wysyla zaszyfrowana wiadomosc
 		function wyslijZaszyfrowane() {
 			//nowy obiekt do szyfrowania
 			var rsa = new RSAKey;
 			//wczytaj klucze z local storage
-			rsa.setPublic(localStorage.getItem($('input#rozmowca').val().trim() + 'nPub'), localStorage.getItem($('input#rozmowca').val().trim() + 'ePub'));
+			rsa.setPublic(localStorage.getItem($('input#rozmowcaNowa').val().trim() + 'nPub'), localStorage.getItem($('input#rozmowcaNowa').val().trim() + 'ePub'));
 			//przygotuj zaszyfrowana wiadomosc
 			var zaszyfrowane = rsa.encrypt($('input#wiadomosc').val().trim());
 			//wyslij zaszyfrowana wiadomosc
-        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'SecureMsg:'+zaszyfrowane, function(){}, function(str){alert(str);});
+        	if(SMS) SMS.sendSMS($('input#rozmowcaNowa').val().trim(), 'SecureMsg:'+zaszyfrowane, function(){}, function(str){alert(str);});
         }
 		
 		//Funkcja wysyla sms techniczny z poleceniem usuniecia kluczy dla naszego numeru oraz usuwa nasze klucze dla adresata
 		function wyslijKasowanie() {
 			//wyslij kasowanie
-        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'Delete', function(){}, function(str){alert(str);});
+        	if(SMS) SMS.sendSMS($('input#rozmowcaNowa').val().trim(), 'Delete', function(){}, function(str){alert(str);});
 			//skasuj nasze klucze
-			localStorage.removeItem($('input#rozmowca').val().trim() + 'n');
-			localStorage.removeItem($('input#rozmowca').val().trim() + 'e'); 
-			localStorage.removeItem($('input#rozmowca').val().trim() + 'd');
-			localStorage.removeItem($('input#rozmowca').val().trim() + 'p');
-			localStorage.removeItem($('input#rozmowca').val().trim() + 'q');
-			localStorage.removeItem($('input#rozmowca').val().trim() + 'dmp1');
-			localStorage.removeItem($('input#rozmowca').val().trim() + 'dmq1');
-			localStorage.removeItem($('input#rozmowca').val().trim() + 'coeff');
-			localStorage.removeItem($('input#rozmowca').val().trim() + 'nPub'); 
-			localStorage.removeItem($('input#rozmowca').val().trim() + 'ePub'); 
+			localStorage.removeItem($('input#rozmowcaNowa').val().trim() + 'n');
+			localStorage.removeItem($('input#rozmowcaNowa').val().trim() + 'e'); 
+			localStorage.removeItem($('input#rozmowcaNowa').val().trim() + 'd');
+			localStorage.removeItem($('input#rozmowcaNowa').val().trim() + 'p');
+			localStorage.removeItem($('input#rozmowcaNowa').val().trim() + 'q');
+			localStorage.removeItem($('input#rozmowcaNowa').val().trim() + 'dmp1');
+			localStorage.removeItem($('input#rozmowcaNowa').val().trim() + 'dmq1');
+			localStorage.removeItem($('input#rozmowcaNowa').val().trim() + 'coeff');
+			localStorage.removeItem($('input#rozmowcaNowa').val().trim() + 'nPub'); 
+			localStorage.removeItem($('input#rozmowcaNowa').val().trim() + 'ePub'); 
         }
 		
 
@@ -169,7 +169,7 @@
 						}
         			}
         		}
-        		$('div#data').html( str )
+        		$('div#odbiorczaPole').html( str )
         		
         	}, function(err){
         		updateStatus('Problem z pluginem: ' + err);
@@ -187,33 +187,79 @@
         </script>
         <div id="fullpage">
             <p>Demo for SMS Plugin</p>
+		<div data-role="page" id="rozpocznij">
+		  <div data-role="header">
+			<h1>Rozpocznij komunikacje</h1>
+		  </div>
+		  Do:<input type="text" value='+48' size=16 id="rozmowca"/><br/>
+	      <button onclick="wyslijZaproszenie();">Send</button><hr/>
+		  
+		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
+		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
+		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
+		  <a href="#skaner" class="ui-btn">Skaner</a>
+		  <div data-role="footer" data-position="fixed">
+			<h1>(c) MK i EK</h1>
+		  </div> 
+		</div>
+		
+		<div data-role="page" id="nowa">
+		<div data-role="header">
+			<h1>Nowa wiadomosc</h1>
+		</div>
+		  
+		Do:<input type="text" size=16 value='+48510189591' id="rozmowcaNowa"/><br/>
+		Tresc:<input type="text" size=50 value='test' id="wiadomosc"/><br/>
+		<button onclick="wyslijZaszyfrowane();">Wyslij wiadomosc</button>
+		  
+		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
+		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
+		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
+		  <a href="#skaner" class="ui-btn">Skaner</a>
+		  <div data-role="footer" data-position="fixed">
+			<h1>(c) MK i EK</h1>
+		  </div> 
+		</div>
+		
+		<div data-role="page" id="odbiorcza">
+		  <div data-role="header">
+			<h1>Skrzynka odbiorcza</h1>
+		  </div>
+		  <div id='odbiorczaPole' style='text-align:left;'></div>
+		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
+		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
+		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
+		  <a href="#skaner" class="ui-btn">Skaner</a>
+		  <button onclick="listSMS();">Wczytaj skrzynke odbiorcza</button>
+		  
+		  <div data-role="footer" data-position="fixed">
+			<h1>(c) MK i EK</h1>
+		  </div> 
+		</div> 
+		
+		<div data-role="page" id="skaner">
+		  <div data-role="header">
+			<h1>Skaner</h1>
+		  </div>
+		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
+		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
+		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
+		  <a href="#skaner" class="ui-btn">Skaner</a>
+		  <div data-role="footer" data-position="fixed">
+			<h1>(c) MK i EK</h1>
+		  </div> 
+		</div> 
+		
+		
+		<!-- Mobile device details page -->
+		<div data-role="page" id="details" data-dialog="true">
+			<div data-role="header" data-theme="a">
+			</div>
+			<div role="main" class="ui-content">
+				<p id="deviceDetails">SMS app for UEK</p>
+			</div>
+		</div>
 
-			To:<input type="text" size=16 value='+48510189591' id="rozmowca"/><br/>
-			To:<input type="text" size=50 value='test' id="wiadomosc"/><br/>
-			<button onclick="wyslijZaproszenie();">Zapos do konwersacji</button>
-			<button onclick="wyslijKasowanie();">Skasuj klucze</button>
-			<button onclick="wyslijZaszyfrowane();">Wyslij zaszyfrowane</button>
-            <hr/>
-            <button onclick="listSMS();">List Inboxx (recent 10)</button>
-            <hr/>
-            
-			<button onclick="startWatch();">Start Watch</button>
-            <button onclick="stopWatch();">Stop Watch</button>
-            <br/><div id='watching'></div>
-            <hr/>
-                
-            <span id='intercept'/>Intercept OFF</span><br/>
-			<button id='enable_intercept' onclick='toggleIntercept();'>Enable</button> 
-            <button onclick="restoreAllSMS();">Restore SMS</button>
-            <button onclick="deleteLastSMS();">Delete Last SMS</button>
-            <hr/>
-            <button onclick="updateStatus('');updateData('');smsList.length=0;">Clear</button><br/>
-            
-            <button onclick="clearStorage();">Clear local storage</button>
-            <div id='status'></div><hr/>
-            <div id='data' style='text-align:left;'></div>
-			
-			
        </div>
     </body>
 </html>
