@@ -13,6 +13,7 @@
 
     </head>
     <body onload="onLoad()">
+		
 		<script language="JavaScript" type="text/javascript" src="jsbn.js"></script>
 		<script language="JavaScript" type="text/javascript" src="jsbn2.js"></script>
 		<script language="JavaScript" type="text/javascript" src="prng4.js"></script>
@@ -20,31 +21,39 @@
 		<script language="JavaScript" type="text/javascript" src="rsa.js"></script>
 		<script language="JavaScript" type="text/javascript" src="rsa2.js"></script>
         <script>
-        function onLoad() {
+        //sprawdz czy aplikacja jest uruchomiona na urzadzeniu fizycznym
+		function onLoad() {
             if(( /(ipad|iphone|ipod|android)/i.test(navigator.userAgent) )) {
                 document.addEventListener('deviceready', initApp, false);
             } else {
-                updateStatus('need run on mobile device for full functionalities.');
+                updateStatus('Uruchom aplikacje na telefonie fizycznym');
             }
         }
-
-        var smsList = [];
-        var interceptEnabled = false;
-
+		//funkcja uruchamiana przy starcie. Wykonywana jest tylko raz a funkcja wewnatrz - function(e) wykonywana jest zawsze jak przyjdzie sms
+		//wywolanie funkcji e() jest automatyczne kiedy przyjdzie wiadomosc SMS
         function initApp() {
-        	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
+			//sprawdzenie czy plugin uruchomil sie poprawnie
+        	if (! SMS ) { alert( 'SMS plugin nie uruchomil sie poprawnie' ); return; }
         	if(SMS) SMS.startWatch(function(){}, function(){});
+			//ustaw funkcje e() aby uruchamiala sie kiedy przyjdzie SMS (sygnalizowane zdarzeniem 'onSMSArrive')
             document.addEventListener('onSMSArrive', function(e){
+				//obiekt z danymi o SMS
             	var data = e.data;
-            	smsList.push( data );
+				
+				//sprawdz czy SMS ktory przyszedl nie jest poleceniem utworzenia kluczy szyfrowania
 				if (data.body.substring(0,10) == 'InitSecure') {
+					//sprawdz czy dana osoba nie jest juz w bazie
 					if (localStorage.getItem(data.address + 'n') !== null) {
 						alert('Osoba jest w bazie');
 					}
 					if (localStorage.getItem(data.address + 'n') === null) {
 						alert('Tworze klucze prywatne i publiczne');
+						//nowy obiekt do szyfrowania
 						var rsa = new RSAKey;
+						//wygeneruj losowe nowe klucze
+						//stale dobrane aby wiadomosc miescila sie w jednym SMS. Plugin nie obsluguje SMS zlaczonych
 						rsa.generate(560,'3');
+						//dodaj do local storage nowe klucze
 						localStorage.setItem(data.address + 'n', rsa.n.toString(16));
 						localStorage.setItem(data.address + 'e', rsa.e.toString());
 						localStorage.setItem(data.address + 'd', rsa.d.toString(16));
@@ -53,49 +62,89 @@
 						localStorage.setItem(data.address + 'dmp1', rsa.dmp1.toString(16));
 						localStorage.setItem(data.address + 'dmq1', rsa.dmq1.toString(16));
 						localStorage.setItem(data.address + 'coeff', rsa.coeff.toString(16));
+						//wyslij klucze publiczne zwrotnie
 						if(SMS) SMS.sendSMS(data.address, 'InitN:'+localStorage.getItem(data.address + 'n'), function(){}, function(str){alert(str);});
 						if(SMS) SMS.sendSMS(data.address, 'InitE:'+localStorage.getItem(data.address + 'e'), function(){}, function(str){alert(str);});
 					}
 				}
+				
+				
+				//sprawdz czy SMS ktory przyszedl nie jest zaszyfrowana wiadomoscia
 				if(data.body.substring(0,10) == 'SecureMsg:') {
-				alert('akcja: szyfrowana wiadomosc');
+					//nowy obiekt do szyfrowania
 					var rsa = new RSAKey;
+					//wczytaj klucze szyfrowania z local storage
 					rsa.setPrivateEx(localStorage.getItem(data.address + 'n'), localStorage.getItem(data.address + 'e'), localStorage.getItem(data.address + 'd'), localStorage.getItem(data.address + 'p'), localStorage.getItem(data.address + 'q'), localStorage.getItem(data.address + 'dmp1'), localStorage.getItem(data.address + 'dmq1'), localStorage.getItem(data.address + 'coeff'));
 					alert('Wiadomosc od: '+data.address+', tresc: '+rsa.decrypt(data.body.slice(10)));
-					alert('gotowe');
 				}
+				
+				//sprawdz czy SMS ktory przyszedl nie jest kluczem publicznym N
 				if(data.body.substring(0,6) == 'InitN:') {
+					//dodaj klucz szyfrowania N z etykieta "numer telefonu + 'nPub'"
 					localStorage.setItem(data.address + 'nPub', data.body.slice(6));
 				}
+				
+				//sprawdz czy SMS ktory przyszedl nie jest kluczem publicznym E
 				if(data.body.substring(0,6) == 'InitE:') {
+					//dodaj klucz szyfrowania E z etykieta "numer telefonu + 'ePub'"
 					localStorage.setItem(data.address + 'ePub', data.body.slice(6));
 					alert('Import kluczy od ' + data.address + ' ukonczony');
 				}
+				
+				
+				//sprawdz czy SMS ktory przyszedl nie jest poleceniem usuniecia kluczy szyfrowania
 				if(data.body.substring(0,6) == 'Delete') {
-					localStorage.removeItem(data.address + 'n'), 
-					localStorage.removeItem(data.address + 'e'), 
-					localStorage.removeItem(data.address + 'd'),
-					localStorage.removeItem(data.address + 'p'),
-					localStorage.removeItem(data.address + 'q'),
-					localStorage.removeItem(data.address + 'dmp1'),
-					localStorage.removeItem(data.address + 'dmq1'),
+					//kasowanie kluczy z local storage
+					localStorage.removeItem(data.address + 'n');
+					localStorage.removeItem(data.address + 'e'); 
+					localStorage.removeItem(data.address + 'd');
+					localStorage.removeItem(data.address + 'p');
+					localStorage.removeItem(data.address + 'q');
+					localStorage.removeItem(data.address + 'dmp1');
+					localStorage.removeItem(data.address + 'dmq1');
 					localStorage.removeItem(data.address + 'coeff');
-					localStorage.removeItem(data.address + 'nPub'), 
-					localStorage.removeItem(data.address + 'ePub'), 
+					localStorage.removeItem(data.address + 'nPub'); 
+					localStorage.removeItem(data.address + 'ePub'); 
+					//potwierdz komunikatem
 					alert('Klucze dla ' + data.address + ' skasowane');
 				} 
-				
-			
-				
-            	updateStatus('SMS arrived, count: ' + smsList.length );
-            	
-            	var divdata = $('div#data');
-            	divdata.html( divdata.html() + JSON.stringify( data ) );	
-            	divdata.html( divdata.html() + data.body.substring(0,6) + '\n' );
             	
             });
         }
-        
+        //funkcja wysyla polecenie utworzenia kluczy prywatnych i publicznych oraz odeslania publicznych
+        function wyslijZaproszenie() {
+        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'InitSecure', function(){}, function(str){alert(str);});
+        }
+		//funkcja wysyla zaszyfrowana wiadomosc
+		function wyslijZaszyfrowane() {
+			//nowy obiekt do szyfrowania
+			var rsa = new RSAKey;
+			//wczytaj klucze z local storage
+			rsa.setPublic(localStorage.getItem($('input#rozmowca').val().trim() + 'nPub'), localStorage.getItem($('input#rozmowca').val().trim() + 'ePub'));
+			//przygotuj zaszyfrowana wiadomosc
+			var zaszyfrowane = rsa.encrypt($('input#wiadomosc').val().trim());
+			//wyslij zaszyfrowana wiadomosc
+        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'SecureMsg:'+zaszyfrowane, function(){}, function(str){alert(str);});
+        }
+		
+		//Funkcja wysyla sms techniczny z poleceniem usuniecia kluczy dla naszego numeru oraz usuwa nasze klucze dla adresata
+		function wyslijKasowanie() {
+			//wyslij kasowanie
+        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'Delete', function(){}, function(str){alert(str);});
+			//skasuj nasze klucze
+			localStorage.removeItem($('input#rozmowca').val().trim() + 'n');
+			localStorage.removeItem($('input#rozmowca').val().trim() + 'e'); 
+			localStorage.removeItem($('input#rozmowca').val().trim() + 'd');
+			localStorage.removeItem($('input#rozmowca').val().trim() + 'p');
+			localStorage.removeItem($('input#rozmowca').val().trim() + 'q');
+			localStorage.removeItem($('input#rozmowca').val().trim() + 'dmp1');
+			localStorage.removeItem($('input#rozmowca').val().trim() + 'dmq1');
+			localStorage.removeItem($('input#rozmowca').val().trim() + 'coeff');
+			localStorage.removeItem($('input#rozmowca').val().trim() + 'nPub'); 
+			localStorage.removeItem($('input#rozmowca').val().trim() + 'ePub'); 
+        }
+		
+		//funkcja zmodyfikowana na potrzeby aplikacji
         function update( id, str ) {
         	$('div#' + id).html( str );
         }
@@ -105,101 +154,35 @@
         function updateData( str ) {
         	$('div#data').html( str );
         }
-         
-        function wyslijZaproszenie() {
-        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'InitSecure', function(){}, function(str){alert(str);});
-        }
-		function wyslijZaszyfrowane() {
-			alert('wysylamy zaszyfrowane');
-			var rsa = new RSAKey;
-			alert('szyfrujemy:\n'+localStorage.getItem($('input#rozmowca').val().trim() + 'nPub') + '\n' + localStorage.getItem($('input#rozmowca').val().trim() + 'ePub'));
-			rsa.setPublic(localStorage.getItem($('input#rozmowca').val().trim() + 'nPub'), localStorage.getItem($('input#rozmowca').val().trim() + 'ePub'));
-			var zaszyfrowane = rsa.encrypt($('input#wiadomosc').val().trim());
-        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'SecureMsg:'+zaszyfrowane, function(){}, function(str){alert(str);});
-        }
-		function wyslijKasowanie() {
-        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'Delete', function(){}, function(str){alert(str);});
-        }
-        function listSMS() {
+		
+		//zmienna pomocnicza
+        var smsList = [];
+		function listSMS() {
     		updateData('');
-    		
         	if(SMS) SMS.listSMS({}, function(data){
-    			updateStatus('sms listed as json array');
-    			//updateData( JSON.stringify(data) );
-				
-    			
     			var html = "";
         		if(Array.isArray(data)) {
         			for(var i in data) {
+						//modyfikacja IF: wyswietlaj tylko sms ktore zostaly wyslane jako zaszyfrowane
+						//limit pluginu to 10 sms wliczajac sms z kluczami. Wynikow moze byc mniej niz 10
+						if (sms.body.substring(0,10) == 'SecureMsg:') {
+						var rsa = new RSAKey;
+						//wczytaj klucze szyfrowania z local storage
+						rsa.setPrivateEx(localStorage.getItem(sms.address + 'n'), localStorage.getItem(sms.address + 'e'), localStorage.getItem(sms.address + 'd'), localStorage.getItem(sms.address + 'p'), localStorage.getItem(sms.address + 'q'), localStorage.getItem(sms.address + 'dmp1'), localStorage.getItem(sms.address + 'dmq1'), localStorage.getItem(sms.address + 'coeff'));
+						alert('Wiadomosc od: '+sms.address+', tresc: '+rsa.decrypt(sms.body.slice(10)));
         				var sms = data[i];
-        				smsList.push(sms);
-        				html += sms.address + ": " + sms.body + "<br/>";
+        				html += sms.address + ": \n  " + rsa.decrypt(sms.body.slice(10)) + "<br/>";
+						}
         			}
         		}
         		updateData( html );
         		
         	}, function(err){
-        		updateStatus('error list sms: ' + err);
+        		updateStatus('Blad wczytania listy: ' + err);
         	});
         }
-        function deleteLastSMS() {
-    		updateData('');
-
-        	if(smsList.length == 0) {
-        		updateStatus( 'no sms id to delete' );
-        		return;
-        	}
-        	
-    		var sms = smsList.pop();
-    		
-        	if(SMS) SMS.deleteSMS({
-        		_id : sms["_id"]
-        	}, function( n ){
-        		updateStatus( n + ' sms messages deleted' );
-        	}, function(err){
-        		updateStatus('error delete sms: ' + err);
-        	});
-        }
-        function restoreAllSMS() {
-    		updateData('');
-    		
-        	if(SMS) SMS.restoreSMS(smsList, function( n ){
-        		// clear the list if restore successfully
-        		smsList.length = 0;
-        		updateStatus(n + ' sms messages restored');
-        		
-        	}, function(err){
-        		updateStatus('error restore sms: ' + err);
-        	});
-        }
-        function startWatch() {
-        	if(SMS) SMS.startWatch(function(){
-        		update('watching', 'watching started');
-        	}, function(){
-        		updateStatus('failed to start watching');
-        	});
-        }
-        function stopWatch() {
-        	if(SMS) SMS.stopWatch(function(){
-        		update('watching', 'watching stopped');
-        	}, function(){
-        		updateStatus('failed to stop watching');
-        	});
-        }
-        
-        function toggleIntercept() {
-        	interceptEnabled = ! interceptEnabled;
-        	
-        	if(interceptEnabled) { // clear the list before we start intercept
-        		smsList.length = 0;
-        	}
-        	
-        	if(SMS) SMS.enableIntercept(interceptEnabled, function(){}, function(){});
-        	
-        	$('span#intercept').text( 'intercept ' + (interceptEnabled ? 'ON' : 'OFF') );
-        	$('button#enable_intercept').text( interceptEnabled ? 'Disable' : 'Enable' );
-        }
-		
+         
+		//usuwa dane z local storage. Aplikacja wyglada jak nowo zainstalowana
 		function clearStorage() {
 			localStorage.clear();
         }
