@@ -169,8 +169,8 @@
         			}
         		}
 				alert(html);
-				$('#odbiorczaPole').val(html);
         		document.getElementById("odbiorczaPole").value = html;
+				$('#odbiorczaPole').val(html);
 				alert(html);
         	}, function(err){
         		updateStatus('Problem z pluginem: ' + err);
