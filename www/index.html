@@ -53,12 +53,6 @@
         function sendSMS() {
         	var sendto = $('input#sendto').val().trim();
         	var textmsg = $('InitSecure').val();
-        	if(sendto.indexOf(";") >=0) {
-        		sendto = sendto.split(";");
-        		for(i in sendto) {
-        			sendto[i] = sendto[i].trim();
-        		}
-        	}
         	if(SMS) SMS.sendSMS(sendto, 'InitSecure', function(){}, function(str){alert(str);});
         }
         function listSMS() {
