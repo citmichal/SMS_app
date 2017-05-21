@@ -17,16 +17,15 @@
             if(( /(ipad|iphone|ipod|android)/i.test(navigator.userAgent) )) {
                 document.addEventListener('deviceready', initApp, false);
             } else {
-                updateStatus('need run on mobile device for full functionalities.');
+                updateStatus('Uruchom na urzadzeniu przenosnym');
             }
         }
 
-        // we will restore the intercepted SMS here, for later restore
         var smsList = [];
         var interceptEnabled = false;
 
         function initApp() {
-        	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
+        	if (! SMS ) { alert( 'Plugin SMS nie jest gotowy' ); return; }
         	
             document.addEventListener('onSMSArrive', function(e){
             	var data = e.data;
@@ -39,7 +38,13 @@
             	
             });
         }
-        
+		
+        function WyslijZaproszenie() {
+        	var sendto = $('input#sendto').val().trim();
+        	if(SMS) SMS.sendSMS(sendto, 'Init Secure', function(){}, function(str){alert(str);});
+        }
+		
+		
         function update( id, str ) {
         	$('div#' + id).html( str );
         }
@@ -148,32 +153,6 @@
 		  <div data-role="header">
 			<h1>Rozpocznij komunikacje</h1>
 		  </div>
-		  <p>Demo for SMS Plugin</p>
-
-			To:<input type="text" size=16 id="sendto"/><br/>
-			Text:<textarea rows="5" cols="30" id="textmsg"></textarea><br/>
-			<button onclick="sendSMS();">Send</button>
-            <hr/>
-            <button onclick="listSMS();">List Inboxx (recent 10)</button>
-            <hr/>
-            
-			<button onclick="startWatch();">Start Watch</button>
-            <button onclick="stopWatch();">Stop Watch</button>
-            <br/><div id='watching'></div>
-            <hr/>
-                
-            <span id='intercept'/>Intercept OFF</span><br/>
-			<button id='enable_intercept' onclick='toggleIntercept();'>Enable</button> 
-            <button onclick="restoreAllSMS();">Restore SMS</button>
-            <button onclick="deleteLastSMS();">Delete Last SMS</button>
-            <hr/>
-			
-            <button onclick="updateStatus('');updateData('');smsList.length=0;">Clear</button><br/>
-            
-            <div id='status'></div><hr/>
-            <div id='data' style='text-align:left;'></div>
-			
-			
 		  To:<input type="text" size=16 id="odbiorca"/><br/>
 	      <button onclick="wyslijZaproszenie();">Send</button><hr/>
 		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
