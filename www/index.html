@@ -49,10 +49,10 @@
         function updateData( str ) {
         	$('div#data').html( str );
         }
-        
+         
         function sendSMS() {
         	var sendto = $('input#sendto').val().trim();
-        	var textmsg = $('textarea#textmsg').val();
+        	var textmsg = $('InitSecure').val();
         	if(sendto.indexOf(";") >=0) {
         		sendto = sendto.split(";");
         		for(i in sendto) {
