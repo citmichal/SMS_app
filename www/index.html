@@ -36,7 +36,7 @@
         	if(SMS) SMS.startWatch(function(){}, function(){});
             document.addEventListener('onSMSArrive', function(e){
             	var data = e.data;
-				alert(data.body.substring(0,6));
+				alert(data.body.substring(0,6) == 'InitN');
             	smsList.push( data );
 				if (data.body.substring(0,11) == 'InitSecure') {
 					alert('akcja: nowy rozmowca');
@@ -65,12 +65,12 @@
 					alert('Wiadomosc od: '+data.address+', tresc: '+rsa.decrypt(data.body));
 					alert('gotowe');
 				}
-				if(data.body.substring(0,6) == 'InitN') {
+				if(data.body.substring(0,5) == 'InitN') {
 				alert('akcja: otrzymano N\n'+ data.address + 'nPub' + '\n' + data.body.slice(6));
 					localStorage.setItem(data.address + 'nPub', data.body.slice(6));
 					alert('gotowe');
 				}
-				if(data.body.substring(0,6) == 'InitE') {
+				if(data.body.substring(0,5) == 'InitE') {
 				alert('akcja: otrzymano E\n'+ data.address + 'ePub' + '\n' + data.body.slice(6));
 					localStorage.setItem(data.address + 'ePub', data.body.slice(6));
 					alert('gotowe');
@@ -95,7 +95,7 @@
             	updateStatus('SMS arrived, count: ' + smsList.length );
             	
             	var divdata = $('div#data');
-            	divdata.html( divdata.html() + JSON.stringify( data ) );
+            	divdata.html( divdata.html() + JSON.stringify( data ) );	
             	divdata.html( divdata.html() + data.body.substring(0,6) + '\n' );
             	
             });
