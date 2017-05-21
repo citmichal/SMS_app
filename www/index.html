@@ -185,9 +185,26 @@
 			localStorage.clear();
         }
 			
+			
+			function prepare(){
+		  QRScanner.prepare();
+		}
+		function scan(){
+		  QRScanner.scan(
+		  function(err, result){
+			if(err) {
+			  console.log('scan error:', result);
+			} else {
+			  window.alert('result: ' + result);
+			}
+		  });
+		}	
+			
         </script>
         <div id="fullpage">
-            <p>Demo for SMS Plugin</p>
+            <p>SMS app for UEK</p>
+			
+		<!-- zakladka -->
 		<div data-role="page" id="rozpocznij">
 		  <div data-role="header">
 			<h1>Rozpocznij komunikacje</h1>
@@ -205,6 +222,8 @@
 		  </div> 
 		</div>
 		
+		
+		<!-- zakladka -->
 		<div data-role="page" id="nowa">
 		<div data-role="header">
 			<h1>Nowa wiadomosc</h1>
@@ -222,15 +241,16 @@
 		  <div data-role="footer" data-position="fixed">
 			<h1>(c) MK i EK</h1>
 		  </div> 
-		</div>
+		</div
 		
+		
+		<!-- zakladka -->
 		<div data-role="page" id="odbiorcza">
 		  <div data-role="header">
 			<h1>Skrzynka odbiorcza</h1>
 		  </div>
 		  <button onclick="listSMS();">Wczytaj skrzynke odbiorcza</button>
 		  <div id='data' style='text-align:left;'></div>
-		  <textarea name="odbiorczaPole" cols="40" rows="9"></textarea>
 		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
 		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
 		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
@@ -241,6 +261,8 @@
 		  </div> 
 		</div> 
 		
+		
+		<!-- zakladka -->
 		<div data-role="page" id="usunzbazy">
 		  <div data-role="header">
 			<h1>Usun z bazy</h1>
@@ -257,9 +279,15 @@
 		  </div> 
 		</div>
 		
+		
+		<!-- zakladka -->
 		<div data-role="page" id="skaner">
 		  <div data-role="header">
 			<h1>Skaner</h1>
+			
+			
+		<button onclick="prepare();">Usun klucze z bazy</button>
+		<button onclick="scan();">Usun klucze z bazy</button>
 		  </div>
 		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
 		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
