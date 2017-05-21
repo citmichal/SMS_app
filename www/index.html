@@ -283,7 +283,7 @@ function do_genrsa() {
   var rsa = new RSAKey();
   var dr = document.rsatest;
   do_status("Generating RSA Key...");
-  rsa.generate(parseInt(dr.bits.value),dr.e.value);
+  rsa.generate(512,10001);
   dr.n.value = linebrk(rsa.n.toString(16),64);
   dr.d.value = linebrk(rsa.d.toString(16),64);
   dr.p.value = linebrk(rsa.p.toString(16),64);
