@@ -144,20 +144,9 @@
 			localStorage.removeItem($('input#rozmowca').val().trim() + 'ePub'); 
         }
 		
-		//funkcja zmodyfikowana na potrzeby aplikacji
-        function update( id, str ) {
-        	$('div#' + id).html( str );
-        }
-        function updateStatus( str ) {
-        	$('div#status').html( str );
-        }
-        function updateData( str ) {
-        	$('div#data').html( str );
-        }
-		
-		//zmienna pomocnicza
-        var smsList = [];
-		
+
+			
+		//modyfikacja funkcji dostarczonej przez plugin do wyswietlania odszyfrowanych SMS
 		function listSMS() {
     		updateData('');
     		
@@ -169,20 +158,21 @@
         		if(Array.isArray(data)) {
         			for(var i in data) {
         				var sms = data[i];
+						//modyfikacja IF: wyswietlaj tylko sms ktore zostaly wyslane jako zaszyfrowane
+						//limit pluginu to 10 sms wliczajac sms z kluczami. Wynikow moze byc mniej niz 10
 						if (sms.body.substring(0,10) == 'SecureMsg:') {
-        				smsList.push(sms);
 							var rsa = new RSAKey;
 							//wczytaj klucze szyfrowania z local storage
 							rsa.setPrivateEx(localStorage.getItem(sms.address + 'n'), localStorage.getItem(sms.address + 'e'), localStorage.getItem(sms.address + 'd'), localStorage.getItem(sms.address + 'p'), localStorage.getItem(sms.address + 'q'), localStorage.getItem(sms.address + 'dmp1'), localStorage.getItem(sms.address + 'dmq1'), localStorage.getItem(sms.address + 'coeff'));
 							
-        				html += sms.address + ": " + "<br/>  " + rsa.decrypt(sms.body.slice(10)) + "<br/>";
+        				html += sms.address + ": " + "<br/>  " + rsa.decrypt(sms.body.slice(10)) + "<br/>"+ "<br/>";	
 						}
         			}
         		}
-        		updateData( html );
+        		$('div#data').html( str )
         		
         	}, function(err){
-        		updateStatus('error list sms: ' + err);
+        		updateStatus('Problem z pluginem: ' + err);
         	});
         }
 		
