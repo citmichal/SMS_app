@@ -51,9 +51,9 @@
         }
          
         function sendSMS() {
-        	var sendto = $('input#sendto').val().trim();
+        	var sendto = $('input#rozmowca').val().trim();
         	var textmsg = $('InitSecure').val();
-        	if(SMS) SMS.sendSMS(sendto, 'InitSecure', function(){}, function(str){alert(str);});
+        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'InitSecure', function(){}, function(str){alert(str);});
         }
         function listSMS() {
     		updateData('');
@@ -138,7 +138,7 @@
         <div id="fullpage">
             <p>Demo for SMS Plugin</p>
 
-			To:<input type="text" size=16 id="sendto"/><br/>
+			To:<input type="text" size=16 id="rozmowca"/><br/>
 			Text:<textarea rows="5" cols="30" id="textmsg"></textarea><br/>
 			<button onclick="sendSMS();">Send</button>
             <hr/>
