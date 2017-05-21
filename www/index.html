@@ -148,11 +148,8 @@
 			
 		//modyfikacja funkcji dostarczonej przez plugin do wyswietlania odszyfrowanych SMS
 		function listSMS() {
-    		updateData('');
     		
         	if(SMS) SMS.listSMS({}, function(data){
-    			updateStatus('sms listed as json array');
-    			//updateData( JSON.stringify(data) );
     			alert('start');
     			var html = "";
         		if(Array.isArray(data)) {
