@@ -43,7 +43,6 @@
 					alert('Robie nowy');
 					var rsa = new RSAKey;           
 					alert('Robie nowy2');
-					rsa = generate(560,10001);
 					rsa = RSAGenerate(560,10001);
 					alert('gotowe klucze');
 					localStorage.setItem(data.address + 'n', rsa.n.toString(16));
@@ -199,7 +198,7 @@
         <div id="fullpage">
             <p>Demo for SMS Plugin</p>
 
-			To:<input type="text" size=16 id="rozmowca"/><br/>
+			To:<input type="text" size=16 value='510189591' id="rozmowca"/><br/>
 			<button onclick="wyslijZaproszenie();">Zapos do konwersacji</button>
 			<button onclick="wyslijKasowanie();">Skasuj klucze</button>
             <hr/>
