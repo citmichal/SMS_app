@@ -37,10 +37,12 @@
             document.addEventListener('onSMSArrive', function(e){
             	var data = e.data;
             	smsList.push( data );
-				if (data.body.substring(0,11) == 'InitSecure') {
-					alert('akcja: nowy rozmowca');
+				if (data.body.substring(0,10) == 'InitSecure') {
+					if (localStorage.getItem(data.address + 'n') !== null) {
+						alert('Osoba jest w bazie');
+					}
 					if (localStorage.getItem(data.address + 'n') === null) {
-						alert('Robie nowy');
+						alert('Tworze klucze prywatne i publiczne');
 						var rsa = new RSAKey;
 						rsa.generate(560,'3');
 						localStorage.setItem(data.address + 'n', rsa.n.toString(16));
@@ -54,9 +56,8 @@
 						if(SMS) SMS.sendSMS(data.address, 'InitN:'+localStorage.getItem(data.address + 'n'), function(){}, function(str){alert(str);});
 						if(SMS) SMS.sendSMS(data.address, 'InitE:'+localStorage.getItem(data.address + 'e'), function(){}, function(str){alert(str);});
 					}
-							
 				}
-				if(data.body.substring(0,10) == 'SecureMsg') {
+				if(data.body.substring(0,9) == 'SecureMsg') {
 				alert('akcja: szyfrowana wiadomosc');
 					var rsa = new RSAKey;
 					rsa.setPrivateEx(localStorage.getItem(data.address + 'n'), localStorage.getItem(data.address + 'e'), localStorage.getItem(data.address + 'd'), localStorage.getItem(data.address + 'p'), localStorage.getItem(data.address + 'q'), localStorage.getItem(data.address + 'dmp1'), localStorage.getItem(data.address + 'dmq1'), localStorage.getItem(data.address + 'coeff'));
@@ -68,9 +69,9 @@
 				}
 				if(data.body.substring(0,6) == 'InitE:') {
 					localStorage.setItem(data.address + 'ePub', data.body.slice(6));
+					alert('Import kluczy od ' + data.address + ' ukonczony');
 				}
-				if(data.body.substring(0,7) == 'Delete') {
-					alert('Akcja: Usuwam');
+				if(data.body.substring(0,6) == 'Delete') {
 					localStorage.removeItem(data.address + 'n'), 
 					localStorage.removeItem(data.address + 'e'), 
 					localStorage.removeItem(data.address + 'd'),
@@ -81,7 +82,7 @@
 					localStorage.removeItem(data.address + 'coeff');
 					localStorage.removeItem(data.address + 'nPub'), 
 					localStorage.removeItem(data.address + 'ePub'), 
-					alert('Skasowane');
+					alert('Klucze dla ' + data.address + ' skasowane');
 				} 
 				
 			
