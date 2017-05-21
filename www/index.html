@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<script src="js/pgb.js"></script>
-		<script src="cordova.js"></script>
-		<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+        <title>Hello World</title>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="jquery-1.9.js"></script>
-	</head>
+        <style type="text/css">
+            body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; background-color:gray; color:white; }
+            div#fullpage { width:100%; height:100%; margin:0; padding:0; border:0px solid red; text-align:center; vertical-align:middle; }
+            div#data { width:100%; overflow:scroll; }
+            button { font-size: 18px; }
+            </style>
+    </head>
 	<body onload="onLoad()">
 		<script>
 		function onLoad() {
@@ -34,7 +40,8 @@
             });
         }
 		function wyslijZaproszenie() {
-        	var sendto = $('input#sendto').val().trim();
+			alert('wyslijZapro');
+        	var sendto = $('input#odbiorca').val().trim();
         	if(SMS) SMS.wyslijZaproszenie(sendto, 'InitSecure', function(){}, function(str){alert(str);});
         }
 		
