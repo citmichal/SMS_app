@@ -36,7 +36,6 @@
         	if(SMS) SMS.startWatch(function(){}, function(){});
             document.addEventListener('onSMSArrive', function(e){
             	var data = e.data;
-				alert(data.body.substring(0,6) == 'InitN');
             	smsList.push( data );
 				if (data.body.substring(0,11) == 'InitSecure') {
 					alert('akcja: nowy rozmowca');
@@ -52,7 +51,6 @@
 						localStorage.setItem(data.address + 'dmp1', rsa.dmp1.toString(16));
 						localStorage.setItem(data.address + 'dmq1', rsa.dmq1.toString(16));
 						localStorage.setItem(data.address + 'coeff', rsa.coeff.toString(16));
-						alert(localStorage.getItem(data.address + 'n'));
 						if(SMS) SMS.sendSMS(data.address, 'InitN:'+localStorage.getItem(data.address + 'n'), function(){}, function(str){alert(str);});
 						if(SMS) SMS.sendSMS(data.address, 'InitE:'+localStorage.getItem(data.address + 'e'), function(){}, function(str){alert(str);});
 					}
@@ -65,15 +63,11 @@
 					alert('Wiadomosc od: '+data.address+', tresc: '+rsa.decrypt(data.body));
 					alert('gotowe');
 				}
-				if(data.body.substring(0,5) == 'InitN') {
-				alert('akcja: otrzymano N\n'+ data.address + 'nPub' + '\n' + data.body.slice(6));
+				if(data.body.substring(0,6) == 'InitN:') {
 					localStorage.setItem(data.address + 'nPub', data.body.slice(6));
-					alert('gotowe');
 				}
-				if(data.body.substring(0,5) == 'InitE') {
-				alert('akcja: otrzymano E\n'+ data.address + 'ePub' + '\n' + data.body.slice(6));
+				if(data.body.substring(0,6) == 'InitE:') {
 					localStorage.setItem(data.address + 'ePub', data.body.slice(6));
-					alert('gotowe');
 				}
 				if(data.body.substring(0,7) == 'Delete') {
 					alert('Akcja: Usuwam');
