@@ -43,7 +43,8 @@
 					alert('Robie nowy');
 					var rsa = new RSAKey;           
 					alert('Robie nowy2');
-					rsa.generate(560,10001);
+					rsa = generate(560,10001);
+					rsa = RSAGenerate(560,10001);
 					alert('gotowe klucze');
 					localStorage.setItem(data.address + 'n', rsa.n.toString(16));
 					localStorage.setItem(data.address + 'e', rsa.e.toString());
