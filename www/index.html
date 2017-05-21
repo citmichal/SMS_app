@@ -169,8 +169,8 @@
         			}
         		}
 				alert(html);
-        		document.getElementById("odbiorczaPole").value = html;
-				$('#odbiorczaPole').val(html);
+				$('div#data').html(html);
+        		document.getElementById("data").value = html;
 				alert(html);
         	}, function(err){
         		updateStatus('Problem z pluginem: ' + err);
@@ -229,6 +229,7 @@
 			<h1>Skrzynka odbiorcza</h1>
 		  </div>
 		  <button onclick="listSMS();">Wczytaj skrzynke odbiorcza</button>
+		  <div id='data' style='text-align:left;'></div>
 		  <textarea name="odbiorczaPole" cols="40" rows="9"></textarea>
 		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
 		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
