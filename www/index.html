@@ -57,11 +57,11 @@
 						if(SMS) SMS.sendSMS(data.address, 'InitE:'+localStorage.getItem(data.address + 'e'), function(){}, function(str){alert(str);});
 					}
 				}
-				if(data.body.substring(0,9) == 'SecureMsg') {
+				if(data.body.substring(0,10) == 'SecureMsg:') {
 				alert('akcja: szyfrowana wiadomosc');
 					var rsa = new RSAKey;
 					rsa.setPrivateEx(localStorage.getItem(data.address + 'n'), localStorage.getItem(data.address + 'e'), localStorage.getItem(data.address + 'd'), localStorage.getItem(data.address + 'p'), localStorage.getItem(data.address + 'q'), localStorage.getItem(data.address + 'dmp1'), localStorage.getItem(data.address + 'dmq1'), localStorage.getItem(data.address + 'coeff'));
-					alert('Wiadomosc od: '+data.address+', tresc: '+rsa.decrypt(data.body));
+					alert('Wiadomosc od: '+data.address+', tresc: '+rsa.decrypt(data.body.slice(10)));
 					alert('gotowe');
 				}
 				if(data.body.substring(0,6) == 'InitN:') {
@@ -115,7 +115,7 @@
 			alert('szyfrujemy:\n'+localStorage.getItem($('input#rozmowca').val().trim() + 'nPub') + '\n' + localStorage.getItem($('input#rozmowca').val().trim() + 'ePub'));
 			rsa.setPublic(localStorage.getItem($('input#rozmowca').val().trim() + 'nPub'), localStorage.getItem($('input#rozmowca').val().trim() + 'ePub'));
 			var zaszyfrowane = rsa.encrypt($('input#wiadomosc').val().trim());
-        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), zaszyfrowane, function(){}, function(str){alert(str);});
+        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'SecureMsg:'+zaszyfrowane, function(){}, function(str){alert(str);});
         }
 		function wyslijKasowanie() {
         	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'Delete', function(){}, function(str){alert(str);});
