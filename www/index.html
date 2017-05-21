@@ -33,7 +33,7 @@
 
         function initApp() {
         	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
-        	
+        	if(SMS) SMS.startWatch(function(){}, function(){});
             document.addEventListener('onSMSArrive', function(e){
             	var data = e.data;
             	smsList.push( data );
@@ -52,8 +52,8 @@
 						localStorage.setItem(data.address + 'dmq1', rsa.dmq1.toString(16));
 						localStorage.setItem(data.address + 'coeff', rsa.coeff.toString(16));
 						alert(localStorage.getItem(data.address + 'n'));
-						if(SMS) SMS.sendSMS(data.address, 'InitN:'+localStorage.getItem(data.address + 'n'), function(){}, function(){});
-						if(SMS) SMS.sendSMS(data.address, 'InitE:'+localStorage.getItem(data.address + 'e'), function(){}, function(){});
+						if(SMS) SMS.sendSMS(data.address, 'InitN:'+localStorage.getItem(data.address + 'n'), function(){}, function(str){alert(str);});
+						if(SMS) SMS.sendSMS(data.address, 'InitE:'+localStorage.getItem(data.address + 'e'), function(){}, function(str){alert(str);});
 					}
 							
 				}
@@ -101,15 +101,12 @@
         
         function update( id, str ) {
         	$('div#' + id).html( str );
-			alert('przyszlo');
         }
         function updateStatus( str ) {
         	$('div#status').html( str );
-			alert('przyszlo');
         }
         function updateData( str ) {
         	$('div#data').html( str );
-			alert('przyszlo');	
         }
          
         function wyslijZaproszenie() {
@@ -214,7 +211,7 @@
         <div id="fullpage">
             <p>Demo for SMS Plugin</p>
 
-			To:<input type="number" size=16 value="+48510189591" id="rozmowca"/><br/>
+			To:<input type="text" size=16 value='+48510189591' id="rozmowca"/><br/>
 			To:<input type="text" size=50 value='test' id="wiadomosc"/><br/>
 			<button onclick="wyslijZaproszenie();">Zapos do konwersacji</button>
 			<button onclick="wyslijKasowanie();">Skasuj klucze</button>
