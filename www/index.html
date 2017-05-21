@@ -57,7 +57,7 @@
 				
 				
 				}
-				if(data.body.substring(0,10)='SecureMsg') {
+				if(data.body.substring(0,10)=='SecureMsg') {
 				alert('akcja: szyfrowana wiadomosc');
 				
 					var rsa = new RSAKey;
@@ -65,7 +65,7 @@
 					alert('Wiadomosc od: '+data.address+', tresc: '+rsa.decrypt(data.body));
 					alert('gotowe')
 				}
-				if(data.body.substring(0,7) ='Delete') {
+				if(data.body.substring(0,7) =='Delete') {
 					alert('Usuwam');
 					localStorage.removeItem(data.address + 'n'), 
 					localStorage.removeItem(data.address + 'e'), 
@@ -75,7 +75,7 @@
 					localStorage.removeItem(data.address + 'dmp1'),
 					localStorage.removeItem(data.address + 'dmq1'),
 					localStorage.removeItem(data.address + 'coeff'));
-				alert('Skasowane');
+					alert('Skasowane');
 				}
 				
 			
