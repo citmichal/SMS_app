@@ -50,7 +50,7 @@
         	$('div#data').html( str );
         }
          
-        function sendSMS() {
+        function wyslijZaproszenie() {
         	var sendto = $('input#rozmowca').val().trim();
         	var textmsg = $('InitSecure').val();
         	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'InitSecure', function(){}, function(str){alert(str);});
@@ -140,7 +140,7 @@
 
 			To:<input type="text" size=16 id="rozmowca"/><br/>
 			Text:<textarea rows="5" cols="30" id="textmsg"></textarea><br/>
-			<button onclick="sendSMS();">Send</button>
+			<button onclick="wyslijZaproszenie();">Send</button>
             <hr/>
             <button onclick="listSMS();">List Inboxx (recent 10)</button>
             <hr/>
