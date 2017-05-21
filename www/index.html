@@ -42,12 +42,15 @@
         
         function update( id, str ) {
         	$('div#' + id).html( str );
+			alert('przyszlo');
         }
         function updateStatus( str ) {
         	$('div#status').html( str );
+			alert('przyszlo');
         }
         function updateData( str ) {
         	$('div#data').html( str );
+			alert('przyszlo');
         }
          
         function wyslijZaproszenie() {
@@ -139,8 +142,7 @@
             <p>Demo for SMS Plugin</p>
 
 			To:<input type="text" size=16 id="rozmowca"/><br/>
-			Text:<textarea rows="5" cols="30" id="textmsg"></textarea><br/>
-			<button onclick="wyslijZaproszenie();">Send</button>
+			<button onclick="wyslijZaproszenie();">Zapos do konwersacji</button>
             <hr/>
             <button onclick="listSMS();">List Inboxx (recent 10)</button>
             <hr/>
