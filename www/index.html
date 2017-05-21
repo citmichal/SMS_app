@@ -17,15 +17,16 @@
             if(( /(ipad|iphone|ipod|android)/i.test(navigator.userAgent) )) {
                 document.addEventListener('deviceready', initApp, false);
             } else {
-                updateStatus('Uruchom na urzadzeniu przenosnym');
+                updateStatus('need run on mobile device for full functionalities.');
             }
         }
 
+        // we will restore the intercepted SMS here, for later restore
         var smsList = [];
         var interceptEnabled = false;
 
         function initApp() {
-        	if (! SMS ) { alert( 'Plugin SMS nie jest gotowy' ); return; }
+        	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
         	
             document.addEventListener('onSMSArrive', function(e){
             	var data = e.data;
@@ -38,13 +39,7 @@
             	
             });
         }
-		
-        function WyslijZaproszenie() {
-        	var sendto = $('input#odbiorca').val().trim();
-        	if(SMS) SMS.WyslijZaproszenie(sendto, 'Init Secure', function(){}, function(str){alert(str);});
-        }
-		
-		
+        
         function update( id, str ) {
         	$('div#' + id).html( str );
         }
@@ -56,7 +51,7 @@
         }
         
         function sendSMS() {
-        	var sendto = $('input#odbiorca').val().trim();
+        	var sendto = $('input#sendto').val().trim();
         	var textmsg = $('textarea#textmsg').val();
         	if(sendto.indexOf(";") >=0) {
         		sendto = sendto.split(";");
@@ -147,76 +142,30 @@
 
         </script>
         <div id="fullpage">
-            
-       </div>
-	   <div data-role="page" id="rozpocznij">
-		  <div data-role="header">
-			<h1>Rozpocznij komunikacje</h1>
-		  </div>
-		  To:<input type="text" size=16 id="sendto"/><br/>
-	      Text:<textarea rows="5" cols="30" id="textmsg"></textarea><br/>
+            <p>Demo for SMS Plugin</p>
+
+			To:<input type="text" size=16 id="sendto"/><br/>
+			Text:<textarea rows="5" cols="30" id="textmsg"></textarea><br/>
 			<button onclick="sendSMS();">Send</button>
             <hr/>
-		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
-		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
-		  <a href="#nadawcza" class="ui-btn">Skrzynka nadawcza</a>
-		  <a href="#skaner" class="ui-btn">Skaner</a>
-		  <div data-role="footer" data-position="fixed">
-			<h1>(c) Michal Kajrunajtys</h1>
-		  </div> 
-		</div>
-		
-		<div data-role="page" id="nowa">
-		  <div data-role="header">
-			<h1>Nowa wiadomosc</h1>
-		  </div>
-		  
-		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
-		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
-		  <a href="#nadawcza" class="ui-btn">Skrzynka nadawcza</a>
-		  <a href="#skaner" class="ui-btn">Skaner</a>
-		  <div data-role="footer" data-position="fixed">
-			<h1>(c) Michal Kajrunajtys</h1>
-		  </div> 
-		</div>
-		
-		<div data-role="page" id="odbiorcza">
-		  <div data-role="header">
-			<h1>Skrzynka odbiorcza</h1>
-		  </div>
-		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
-		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
-		  <a href="#nadawcza" class="ui-btn">Skrzynka nadawcza</a>
-		  <a href="#skaner" class="ui-btn">Skaner</a>
-		  <div data-role="footer" data-position="fixed">
-			<h1>(c) Michal Kajrunajtys</h1>
-		  </div> 
-		</div> 
-		
-		<div data-role="page" id="nadawcza">
-		  <div data-role="header">
-			<h1>Skrzynka nadawcza</h1>
-		  </div>
-		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
-		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
-		  <a href="#nadawcza" class="ui-btn">Skrzynka nadawcza</a>
-		  <a href="#skaner" class="ui-btn">Skaner</a>
-		  <div data-role="footer" data-position="fixed">
-			<h1>(c) Michal Kajrunajtys</h1>
-		  </div> 
-		</div> 
-		
-		<div data-role="page" id="skaner">
-		  <div data-role="header">
-			<h1>Skaner</h1>
-		  </div>
-		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
-		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
-		  <a href="#nadawcza" class="ui-btn">Skrzynka nadawcza</a>
-		  <a href="#skaner" class="ui-btn">Skaner</a>
-		  <div data-role="footer" data-position="fixed">
-			<h1>(c) Michal Kajrunajtys</h1>
-		  </div> 
-		</div> 
+            <button onclick="listSMS();">List Inboxx (recent 10)</button>
+            <hr/>
+            
+			<button onclick="startWatch();">Start Watch</button>
+            <button onclick="stopWatch();">Stop Watch</button>
+            <br/><div id='watching'></div>
+            <hr/>
+                
+            <span id='intercept'/>Intercept OFF</span><br/>
+			<button id='enable_intercept' onclick='toggleIntercept();'>Enable</button> 
+            <button onclick="restoreAllSMS();">Restore SMS</button>
+            <button onclick="deleteLastSMS();">Delete Last SMS</button>
+            <hr/>
+			
+            <button onclick="updateStatus('');updateData('');smsList.length=0;">Clear</button><br/>
+            
+            <div id='status'></div><hr/>
+            <div id='data' style='text-align:left;'></div>
+       </div>
     </body>
 </html>
