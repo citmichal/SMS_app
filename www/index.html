@@ -36,6 +36,7 @@
         	if(SMS) SMS.startWatch(function(){}, function(){});
             document.addEventListener('onSMSArrive', function(e){
             	var data = e.data;
+				alert(data.body.substring(0,6));
             	smsList.push( data );
 				if (data.body.substring(0,11) == 'InitSecure') {
 					alert('akcja: nowy rozmowca');
