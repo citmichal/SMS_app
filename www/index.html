@@ -169,8 +169,7 @@
 						}
         			}
         		}
-        		$('div#odbiorczaPole').html( str )
-        		
+        		document.getElementById("odbiorczaPole").value = html;
         	}, function(err){
         		updateStatus('Problem z pluginem: ' + err);
         	});
@@ -197,6 +196,7 @@
 		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
 		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
 		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
+		  <a href="#usunzbazy" class="ui-btn">Usun z bazy</a>
 		  <a href="#skaner" class="ui-btn">Skaner</a>
 		  <div data-role="footer" data-position="fixed">
 			<h1>(c) MK i EK</h1>
@@ -226,8 +226,8 @@
 		  <div data-role="header">
 			<h1>Skrzynka odbiorcza</h1>
 		  </div>
-		  <div id='odbiorczaPole' style='text-align:left;'></div>
 		  <button onclick="listSMS();">Wczytaj skrzynke odbiorcza</button>
+		  <input type="text" size=500 value='test' id="odbiorczaPole"/>
 		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
 		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
 		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
