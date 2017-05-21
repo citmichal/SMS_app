@@ -38,7 +38,7 @@
 				alert('akcja: nowy rozmowca');
             	var data = e.data;
             	smsList.push( data );
-				if(data.body.substring(0,11)='InitSecure') {
+				if (data.body.substring(0,11) == 'InitSecure') {
 				if (localStorage.getItem(data.address + 'n') === null) {
 					alert('Robie nowy');
 					//var rsa = new RSAKey;           
