@@ -35,10 +35,10 @@
         	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
         	
             document.addEventListener('onSMSArrive', function(e){
-				alert('akcja: nowy rozmowca');
             	var data = e.data;
             	smsList.push( data );
 				if (data.body.substring(0,11) == 'InitSecure') {
+					alert('akcja: nowy rozmowca');
 					if (localStorage.getItem(data.address + 'n') === null) {
 						alert('Robie nowy');
 						var rsa = new RSAKey;
@@ -59,14 +59,13 @@
 				}
 				if(data.body.substring(0,10) == 'SecureMsg') {
 				alert('akcja: szyfrowana wiadomosc');
-				
 					var rsa = new RSAKey;
 					rsa.setPrivateEx(localStorage.getItem(data.address + 'n'), localStorage.getItem(data.address + 'e'), localStorage.getItem(data.address + 'd'), localStorage.getItem(data.address + 'p'), localStorage.getItem(data.address + 'q'), localStorage.getItem(data.address + 'dmp1'), localStorage.getItem(data.address + 'dmq1'), localStorage.getItem(data.address + 'coeff'));
 					alert('Wiadomosc od: '+data.address+', tresc: '+rsa.decrypt(data.body));
 					alert('gotowe')
 				}
-				/*if(data.body.substring(0,7) == 'Delete') {
-					alert('Usuwam');
+				if(data.body.substring(0,7) == 'Delete') {
+					alert('Akcja: Usuwam');
 					localStorage.removeItem(data.address + 'n'), 
 					localStorage.removeItem(data.address + 'e'), 
 					localStorage.removeItem(data.address + 'd'),
@@ -76,7 +75,7 @@
 					localStorage.removeItem(data.address + 'dmq1'),
 					localStorage.removeItem(data.address + 'coeff'));
 					alert('Skasowane');
-				} */
+				} 
 				
 			
 				
