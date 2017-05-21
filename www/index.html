@@ -63,17 +63,17 @@
 					var rsa = new RSAKey;
 					rsa.setPrivateEx(localStorage.getItem(data.address + 'n'), localStorage.getItem(data.address + 'e'), localStorage.getItem(data.address + 'd'), localStorage.getItem(data.address + 'p'), localStorage.getItem(data.address + 'q'), localStorage.getItem(data.address + 'dmp1'), localStorage.getItem(data.address + 'dmq1'), localStorage.getItem(data.address + 'coeff'));
 					alert('Wiadomosc od: '+data.address+', tresc: '+rsa.decrypt(data.body));
-					alert('gotowe')
+					alert('gotowe');
 				}
 				if(data.body.substring(0,6) == 'InitN') {
-				alert('akcja: otrzymano N\n'+ data.address + 'nPub' + '\n' data.body.slice(6));
+				alert('akcja: otrzymano N\n'+ data.address + 'nPub' + '\n' + data.body.slice(6));
 					localStorage.setItem(data.address + 'nPub', data.body.slice(6));
-					alert('gotowe')
+					alert('gotowe');
 				}
 				if(data.body.substring(0,6) == 'InitE') {
-				alert('akcja: otrzymano E\n'+ data.address + 'ePub' + '\n' data.body.slice(6));
+				alert('akcja: otrzymano E\n'+ data.address + 'ePub' + '\n' + data.body.slice(6));
 					localStorage.setItem(data.address + 'ePub', data.body.slice(6));
-					alert('gotowe')
+					alert('gotowe');
 				}
 				if(data.body.substring(0,7) == 'Delete') {
 					alert('Akcja: Usuwam');
@@ -116,7 +116,7 @@
         function wyslijZaproszenie() {
         	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'InitSecure', function(){}, function(str){alert(str);});
         }
-			function wyslijZaszyfrowane() {
+		function wyslijZaszyfrowane() {
 			var rsa = new RSAKey;
 			rsa.setPublic(getItem($('input#rozmowca').val().trim() + 'nPub'), getItem($('input#rozmowca').val().trim() + 'ePub'));
 			alert('szyfrujemy:\n'+getItem($('input#rozmowca').val().trim() + 'nPub') + '\n' + getItem($('input#rozmowca').val().trim() + 'ePub'));
