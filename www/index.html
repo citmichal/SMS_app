@@ -179,19 +179,39 @@
 		
          
 		//usuwa dane z local storage. Aplikacja wyglada jak nowo zainstalowana
-		function clearStorage() {
+		function runQR() {
 			cordova.plugins.barcodeScanner.scan(
       function (result) {
           alert("We got a barcode\n" +
                 "Result: " + result.text + "\n" +
                 "Format: " + result.format + "\n" +
                 "Cancelled: " + result.cancelled);
+				if (result.text.substring(0,7) == 'RSAkeys') {
+				var wynik = result.text;
+				var telefon;
+				var nPub;
+				var ePub;
+				//wyluskaj nr telefonu
+				telefon=result.text.substring(result.text.search(',')+1).substring(0,result.text.search(','));
+				//wyluskaj klucz nPub
+				nPub=result.text.substring(result.text.search(',')+1).substring(result.text.search(',')+1).substring(0,result.text.search(','));
+				//wyluskaj klucz ePub
+				ePub=result.text.substring(result.text.search(',')+1).substring(result.text.search(',')+1).substring(result.text.search(',')+1);
+				
+				localStorage.setItem(telefon + 'nPub', nPub);
+				localStorage.setItem(telefon + 'ePub', ePub);
+				alert("Dodano do bazy");
+				
+				}
+				
+				
       },
+	  
       function (error) {
-          alert("Scanning failed: " + error);
+          alert("Skanowanie nieudane: " + error);
       },
       {
-          preferFrontCamera : true, // iOS and Android
+          preferFrontCamera : false, // iOS and Android
           showFlipCameraButton : true, // iOS and Android
           showTorchButton : true, // iOS and Android
           torchOn: true, // Android, launch with the torch switched on (if available)
@@ -294,8 +314,7 @@
 		  </div>
 		  
 		  
-		<button onclick="clearStorage();">Usun klucze z bazy</button>
-			clearStorage
+		<button onclick="runQR();">Uruchom QR skan</button>
 		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
 		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
 		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
