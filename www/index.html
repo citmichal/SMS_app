@@ -40,7 +40,7 @@
         }
 		
         function WyslijZaproszenie() {
-        	var sendto = $('input#sendto').val().trim();
+        	var sendto = $('input#odbiorca').val().trim();
         	if(SMS) SMS.WyslijZaproszenie(sendto, 'Init Secure', function(){}, function(str){alert(str);});
         }
 		
