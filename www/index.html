@@ -51,6 +51,7 @@
 						localStorage.setItem(data.address + 'dmp1', rsa.dmp1.toString(16));
 						localStorage.setItem(data.address + 'dmq1', rsa.dmq1.toString(16));
 						localStorage.setItem(data.address + 'coeff', rsa.coeff.toString(16));
+						alert(localStorage.getItem(data.address + 'n'));
 					}
 					alert('po IF');
 							
@@ -71,7 +72,7 @@
 					localStorage.removeItem(data.address + 'q'),
 					localStorage.removeItem(data.address + 'dmp1'),
 					localStorage.removeItem(data.address + 'dmq1'),
-					localStorage.removeItem(data.address + 'coeff'));
+					localStorage.removeItem(data.address + 'coeff');
 					alert('Skasowane');
 				} 
 				
