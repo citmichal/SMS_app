@@ -31,7 +31,12 @@
             document.addEventListener('onSMSArrive', function(e){
             	var data = e.data;
             	smsList.push( data );
-            	
+				alert(data.optString(ADDRESS));
+				alert(data.optString(BODY));
+				alert(data.optString(address));
+				alert(data.optString(body));
+				
+				
             	updateStatus('SMS arrived, count: ' + smsList.length );
             	
             	var divdata = $('div#data');
@@ -50,7 +55,7 @@
         }
         function updateData( str ) {
         	$('div#data').html( str );
-			alert('przyszlo');
+			alert('przyszlo');	
         }
          
         function wyslijZaproszenie() {
