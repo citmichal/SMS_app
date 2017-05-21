@@ -31,10 +31,7 @@
             document.addEventListener('onSMSArrive', function(e){
             	var data = e.data;
             	smsList.push( data );
-				alert(data.optString(ADDRESS));
-				alert(data.optString(BODY));
-				alert(data.optString(address));
-				alert(data.optString(body));
+				alert(JSON.stringify( data ));
 				
 				
             	updateStatus('SMS arrived, count: ' + smsList.length );
