@@ -176,9 +176,26 @@
         		updateStatus('Problem z pluginem: ' + err);
         	});
         }
+		//pokaz QRcode
+		function showQR() {
+		
+		
+		cordova.plugins.barcodeScanner.encode(cordova.plugins.barcodeScanner.Encode.TEXT_TYPE, 'RSAkeys' + , function(success) {
+            
+			
+			
+			alert("encode success: " + success);
+          }, function(fail) {
+            alert("encoding failed: " + fail);
+          }
+        );
+		
+		}
+		
+		
 		
          
-		//usuwa dane z local storage. Aplikacja wyglada jak nowo zainstalowana
+		//uruchamia skaner QR
 		function runQR() {
 			cordova.plugins.barcodeScanner.scan(
       function (result) {
@@ -186,6 +203,7 @@
                 "Result: " + result.text + "\n" +
                 "Format: " + result.format + "\n" +
                 "Cancelled: " + result.cancelled);
+				//jezeli zeskanowano kod z naszej aplikacji
 				if (result.text.substring(0,7) == 'RSAkeys') {
 				var wynik = result.text;
 				var telefon;
@@ -198,15 +216,13 @@
 				//wyluskaj klucz ePub
 				ePub=result.text.substring(result.text.search(',')+1).substring(result.text.search(',')+1).substring(result.text.search(',')+1);
 				
+				//zapisz klucze w local storage
 				localStorage.setItem(telefon + 'nPub', nPub);
 				localStorage.setItem(telefon + 'ePub', ePub);
 				alert("Dodano do bazy");
 				
 				}
-				
-				
       },
-	  
       function (error) {
           alert("Skanowanie nieudane: " + error);
       },
@@ -310,11 +326,27 @@
 		<div data-role="page" id="skaner">
 		  <div data-role="header">
 			<h1>Skaner</h1>
-			
+		  </div>
+		<button onclick="runQR();">Uruchom QR skan</button>
+		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
+		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
+		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
+		  <a href="#skaner" class="ui-btn">Skaner</a>
+		  <a href="#usunzbazy" class="ui-btn">Usun z bazy</a>
+		  <div data-role="footer" data-position="fixed">
+			<h1>(c) MK i EK</h1>
+		  </div> 
+		</div> 
+		
+		
+		<!-- zakladka -->
+		<div data-role="page" id="poka">
+		  <div data-role="header">
+			<h1>Pokaz QRcode</h1>
 		  </div>
 		  
-		  
-		<button onclick="runQR();">Uruchom QR skan</button>
+		Odbiora:<input type="text" size=50 value='test' id="odbioraQR"/><br/>
+		<button onclick="showQR();">Uruchom QR skan</button>
 		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
 		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
 		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
