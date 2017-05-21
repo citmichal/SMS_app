@@ -117,9 +117,10 @@
         	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'InitSecure', function(){}, function(str){alert(str);});
         }
 		function wyslijZaszyfrowane() {
+			alert('wysylamy zaszyfrowane');
 			var rsa = new RSAKey;
-			rsa.setPublic(getItem($('input#rozmowca').val().trim() + 'nPub'), getItem($('input#rozmowca').val().trim() + 'ePub'));
 			alert('szyfrujemy:\n'+getItem($('input#rozmowca').val().trim() + 'nPub') + '\n' + getItem($('input#rozmowca').val().trim() + 'ePub'));
+			rsa.setPublic(getItem($('input#rozmowca').val().trim() + 'nPub'), getItem($('input#rozmowca').val().trim() + 'ePub'));
 			var zaszyfrowane = rsa.encrypt($('input#wiadomosc').val().trim());
         	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), zaszyfrowane, function(){}, function(str){alert(str);});
         }
