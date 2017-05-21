@@ -178,9 +178,24 @@
         }
 		//pokaz QRcode
 		function showQR() {
+		var rsa = new RSAKey;
+		//wygeneruj losowe nowe klucze
+		//stale dobrane aby wiadomosc miescila sie w jednym SMS. Plugin nie obsluguje SMS zlaczonych
+		rsa.generate(560,'3');
+		//dodaj do local storage nowe klucze
+		localStorage.setItem($('input#odbioraQR').val().trim() + 'n', rsa.n.toString(16));
+		localStorage.setItem($('input#odbioraQR').val().trim() + 'e', rsa.e.toString());
+		localStorage.setItem($('input#odbioraQR').val().trim() + 'd', rsa.d.toString(16));
+		localStorage.setItem($('input#odbioraQR').val().trim() + 'p', rsa.p.toString(16));
+		localStorage.setItem($('input#odbioraQR').val().trim() + 'q', rsa.q.toString(16));
+		localStorage.setItem($('input#odbioraQR').val().trim() + 'dmp1', rsa.dmp1.toString(16));
+		localStorage.setItem($('input#odbioraQR').val().trim() + 'dmq1', rsa.dmq1.toString(16));
+		localStorage.setItem($('input#odbioraQR').val().trim() + 'coeff', rsa.coeff.toString(16));
+		//wyslij klucze publiczne zwrotnie
+		if(SMS) SMS.sendSMS(data.address, 'InitN:'+localStorage.getItem(data.address + 'n'), function(){}, function(str){alert(str);});
+		if(SMS) SMS.sendSMS(data.address, 'InitE:'+localStorage.getItem(data.address + 'e'), function(){}, function(str){alert(str);});
 		
-		
-		cordova.plugins.barcodeScanner.encode(cordova.plugins.barcodeScanner.Encode.TEXT_TYPE, 'RSAkeys', function(success) {
+		cordova.plugins.barcodeScanner.encode(cordova.plugins.barcodeScanner.Encode.TEXT_TYPE, 'RSAkeys,'+ $('input#odbioraQR').val().trim() +','+localStorage.getItem($('input#odbioraQR').val().trim() + 'n')+','+localStorage.getItem($('input#odbioraQR').val().trim() + 'e'), function(success) {
             
 			
 			
