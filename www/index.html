@@ -166,12 +166,13 @@
 						//modyfikacja IF: wyswietlaj tylko sms ktore zostaly wyslane jako zaszyfrowane
 						//limit pluginu to 10 sms wliczajac sms z kluczami. Wynikow moze byc mniej niz 10
 						if (sms.body.substring(0,10) == 'SecureMsg:') {
+						var sms = data[i];
 						var rsa = new RSAKey;
 						//wczytaj klucze szyfrowania z local storage
 						rsa.setPrivateEx(localStorage.getItem(sms.address + 'n'), localStorage.getItem(sms.address + 'e'), localStorage.getItem(sms.address + 'd'), localStorage.getItem(sms.address + 'p'), localStorage.getItem(sms.address + 'q'), localStorage.getItem(sms.address + 'dmp1'), localStorage.getItem(sms.address + 'dmq1'), localStorage.getItem(sms.address + 'coeff'));
 						alert('Wiadomosc od: '+sms.address+', tresc: '+rsa.decrypt(sms.body.slice(10)));
-        				var sms = data[i];
         				html += sms.address + ": \n  " + rsa.decrypt(sms.body.slice(10)) + "<br/>";
+						alert(html)
 						}
         			}
         		}
