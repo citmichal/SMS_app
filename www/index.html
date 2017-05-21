@@ -10,6 +10,12 @@
         <title>SMS App UEK</title>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="jquery-1.9.js"></script>
+		<script language="JavaScript" type="text/javascript" src="jsbn.js"></script>
+		<script language="JavaScript" type="text/javascript" src="jsbn2.js"></script>
+		<script language="JavaScript" type="text/javascript" src="prng4.js"></script>
+		<script language="JavaScript" type="text/javascript" src="rng.js"></script>
+		<script language="JavaScript" type="text/javascript" src="rsa.js"></script>
+		<script language="JavaScript" type="text/javascript" src="rsa2.js"></script>
     </head>
     <body onload="onLoad()">
         <script>
@@ -21,7 +27,6 @@
             }
         }
 
-        // we will restore the intercepted SMS here, for later restore
         var smsList = [];
         var interceptEnabled = false;
 
@@ -29,14 +34,48 @@
         	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
         	
             document.addEventListener('onSMSArrive', function(e){
+				alert('akcja: nowy rozmowca');
             	var data = e.data;
             	smsList.push( data );
-				alert('+' + JSON.stringify( data ).BODY + '+');
+				if(data.body.substring(0,11)='InitSecure') {
+				if (localStorage.getItem(data.address + 'n') === null)
+					alert('Robie nowy');
+					var rsa = new RSAKey;
+					rsa.generate(560,10001);
+					localStorage.setItem(data.address + 'n', rsa.n.toString(16));
+					localStorage.setItem(data.address + 'e', rsa.e.toString());
+					localStorage.setItem(data.address + 'd', rsa.d.toString(16));
+					localStorage.setItem(data.address + 'p', rsa.p.toString(16));
+					localStorage.setItem(data.address + 'q', rsa.q.toString(16));
+					localStorage.setItem(data.address + 'dmp1', rsa.dmp1.toString(16));
+					localStorage.setItem(data.address + 'dmq1', rsa.dmq1.toString(16));
+					localStorage.setItem(data.address + 'coeff', rsa.coeff.toString(16));
+				}
+					alert('gotowe');
 				
-				alert('+' + JSON.stringify( data ).body + '+');
-				alert('+' + data.BODY + '+');
 				
-				alert('+' + data.body + '+');
+				
+				}
+				if(data.body.substring(0,10)='SecureMsg') {
+				alert('akcja: szyfrowana wiadomosc');
+				
+					var rsa = new RSAKey;
+					rsa.setPublic(localStorage.getItem(data.address + 'n'), localStorage.getItem(data.address + 'e'));
+					alert('Wiadomosc od: '+data.address+', tresc: '+rsa.encrypt(document.rsatest.plaintext.value));
+					alert('gotowe');
+				}
+				if(data.body.substring(0,7) ='Delete') {
+					alert('Usuwam');
+					localStorage.removeItem(data.address + 'e'), 
+					localStorage.removeItem(data.address + 'd'),
+					localStorage.removeItem(data.address + 'p'),
+					localStorage.removeItem(data.address + 'q'),
+					localStorage.removeItem(data.address + 'dmp1'),
+					localStorage.removeItem(data.address + 'dmq1'),
+					localStorage.removeItem(data.address + 'coeff'));
+				alert('Skasowane');
+				}
+				
 				
 				
             	updateStatus('SMS arrived, count: ' + smsList.length );
@@ -61,9 +100,10 @@
         }
          
         function wyslijZaproszenie() {
-        	var sendto = $('input#rozmowca').val().trim();
-        	var textmsg = $('InitSecure').val();
         	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'InitSecure', function(){}, function(str){alert(str);});
+        }
+		function wyslijKasowanie() {
+        	if(SMS) SMS.sendSMS($('input#rozmowca').val().trim(), 'Delete', function(){}, function(str){alert(str);});
         }
         function listSMS() {
     		updateData('');
@@ -71,6 +111,7 @@
         	if(SMS) SMS.listSMS({}, function(data){
     			updateStatus('sms listed as json array');
     			//updateData( JSON.stringify(data) );
+				
     			
     			var html = "";
         		if(Array.isArray(data)) {
@@ -143,6 +184,10 @@
         	$('span#intercept').text( 'intercept ' + (interceptEnabled ? 'ON' : 'OFF') );
         	$('button#enable_intercept').text( interceptEnabled ? 'Disable' : 'Enable' );
         }
+		
+		function clearStorage() {
+			localStorage.clear();
+        }
 
         </script>
         <div id="fullpage">
@@ -150,6 +195,7 @@
 
 			To:<input type="text" size=16 id="rozmowca"/><br/>
 			<button onclick="wyslijZaproszenie();">Zapos do konwersacji</button>
+			<button onclick="wyslijKasowanie();">Skasuj klucze</button>
             <hr/>
             <button onclick="listSMS();">List Inboxx (recent 10)</button>
             <hr/>
@@ -164,9 +210,9 @@
             <button onclick="restoreAllSMS();">Restore SMS</button>
             <button onclick="deleteLastSMS();">Delete Last SMS</button>
             <hr/>
-			
             <button onclick="updateStatus('');updateData('');smsList.length=0;">Clear</button><br/>
             
+            <button onclick="clearStorage();">Clear local storage</button>
             <div id='status'></div><hr/>
             <div id='data' style='text-align:left;'></div>
        </div>
