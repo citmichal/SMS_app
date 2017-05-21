@@ -177,28 +177,12 @@
         	});
         }
 		
-		
-		
          
 		//usuwa dane z local storage. Aplikacja wyglada jak nowo zainstalowana
 		function clearStorage() {
 			localStorage.clear();
         }
 			
-			
-			function prepare(){
-		  QRScanner.prepare();
-		}
-		function scan(){
-		  QRScanner.scan(
-		  function(err, result){
-			if(err) {
-			  console.log('scan error:', result);
-			} else {
-			  window.alert('result: ' + result);
-			}
-		  });
-		}	
 			
         </script>
         <div id="fullpage">
@@ -287,9 +271,8 @@
 			
 			
 		  </div>
-		  
-		<button onclick="testAll();">Usun klucze z bazy</button>
-		<button onclick="scan();">Usun klucze z bazy2</button>
+		  <a target="_blank" href="javascript:scan();" style="text-decoration: none"><button>Scan</button></a>
+            <a target="_blank" href="#display" style="text-decoration: none"><button>Display Scanned Data</button></a>
 		  <a href="#rozpocznij" class="ui-btn">Rozpocznij komunikacje</a>
 		  <a href="#nowa" class="ui-btn">Nowa wiadomosc</a>
 		  <a href="#odbiorcza" class="ui-btn">Skrzynka odbiorcza</a>
