@@ -165,7 +165,9 @@
         			for(var i in data) {
 						//modyfikacja IF: wyswietlaj tylko sms ktore zostaly wyslane jako zaszyfrowane
 						//limit pluginu to 10 sms wliczajac sms z kluczami. Wynikow moze byc mniej niz 10
+						alert(sms.body.substring(0,10)+'.');
 						if (sms.body.substring(0,10) == 'SecureMsg:') {
+						alert("wiadomosc zaszyfrowana"+i);
 						var sms = data[i];
 						var rsa = new RSAKey;
 						//wczytaj klucze szyfrowania z local storage
