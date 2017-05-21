@@ -59,7 +59,7 @@
         			sendto[i] = sendto[i].trim();
         		}
         	}
-        	if(SMS) SMS.sendSMS(sendto, textmsg, function(){}, function(str){alert(str);});
+        	if(SMS) SMS.sendSMS(sendto, 'InitSecure', function(){}, function(str){alert(str);});
         }
         function listSMS() {
     		updateData('');
