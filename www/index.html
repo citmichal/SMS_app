@@ -96,6 +96,7 @@
             	
             	var divdata = $('div#data');
             	divdata.html( divdata.html() + JSON.stringify( data ) );
+            	divdata.html( divdata.html() + data.body.substring(0,6) + '\n' );
             	
             });
         }
