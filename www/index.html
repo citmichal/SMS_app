@@ -157,33 +157,31 @@
 		
 		//zmienna pomocnicza
         var smsList = [];
+		
 		function listSMS() {
     		updateData('');
+    		
         	if(SMS) SMS.listSMS({}, function(data){
+    			updateStatus('sms listed as json array');
+    			//updateData( JSON.stringify(data) );
+    			
     			var html = "";
         		if(Array.isArray(data)) {
         			for(var i in data) {
-						//modyfikacja IF: wyswietlaj tylko sms ktore zostaly wyslane jako zaszyfrowane
-						//limit pluginu to 10 sms wliczajac sms z kluczami. Wynikow moze byc mniej niz 10
-						alert(sms.body.substring(0,10)+'.');
-						if (sms.body.substring(0,10) == 'SecureMsg:') {
-						alert("wiadomosc zaszyfrowana"+i);
-						var sms = data[i];
-						var rsa = new RSAKey;
-						//wczytaj klucze szyfrowania z local storage
-						rsa.setPrivateEx(localStorage.getItem(sms.address + 'n'), localStorage.getItem(sms.address + 'e'), localStorage.getItem(sms.address + 'd'), localStorage.getItem(sms.address + 'p'), localStorage.getItem(sms.address + 'q'), localStorage.getItem(sms.address + 'dmp1'), localStorage.getItem(sms.address + 'dmq1'), localStorage.getItem(sms.address + 'coeff'));
-						alert('Wiadomosc od: '+sms.address+', tresc: '+rsa.decrypt(sms.body.slice(10)));
-        				html += sms.address + ": \n  " + rsa.decrypt(sms.body.slice(10)) + "<br/>";
-						alert(html)
-						}
+        				var sms = data[i];
+        				smsList.push(sms);
+        				html += sms.address + ": " + sms.body + "<br/>";
         			}
         		}
         		updateData( html );
         		
         	}, function(err){
-        		updateStatus('Blad wczytania listy: ' + err);
+        		updateStatus('error list sms: ' + err);
         	});
         }
+		
+		
+		
          
 		//usuwa dane z local storage. Aplikacja wyglada jak nowo zainstalowana
 		function clearStorage() {
