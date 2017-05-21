@@ -191,14 +191,11 @@
 		localStorage.setItem($('input#odbioraQR').val().trim() + 'dmp1', rsa.dmp1.toString(16));
 		localStorage.setItem($('input#odbioraQR').val().trim() + 'dmq1', rsa.dmq1.toString(16));
 		localStorage.setItem($('input#odbioraQR').val().trim() + 'coeff', rsa.coeff.toString(16));
-		//wyslij klucze publiczne zwrotnie
-		if(SMS) SMS.sendSMS(data.address, 'InitN:'+localStorage.getItem(data.address + 'n'), function(){}, function(str){alert(str);});
-		if(SMS) SMS.sendSMS(data.address, 'InitE:'+localStorage.getItem(data.address + 'e'), function(){}, function(str){alert(str);});
-		
+		//pokaz QR
 		cordova.plugins.barcodeScanner.encode(cordova.plugins.barcodeScanner.Encode.TEXT_TYPE, 'RSAkeys,'+ $('input#odbioraQR').val().trim() +','+localStorage.getItem($('input#odbioraQR').val().trim() + 'n')+','+localStorage.getItem($('input#odbioraQR').val().trim() + 'e'), function(success) {
             
 			
-			
+		
 			alert("encode success: " + success);
           }, function(fail) {
             alert("encoding failed: " + fail);
