@@ -55,7 +55,6 @@
 						if(SMS) SMS.sendSMS(data.address, 'InitN:'+localStorage.getItem(data.address + 'n'), function(){}, function(){});
 						if(SMS) SMS.sendSMS(data.address, 'InitE:'+localStorage.getItem(data.address + 'e'), function(){}, function(){});
 					}
-					alert('po IF');
 							
 				}
 				if(data.body.substring(0,10) == 'SecureMsg') {
@@ -215,7 +214,7 @@
         <div id="fullpage">
             <p>Demo for SMS Plugin</p>
 
-			To:<input type="number" size=16 value='+48510189591' id="rozmowca"/><br/>
+			To:<input type="number" size=16 value="+48510189591" id="rozmowca"/><br/>
 			To:<input type="text" size=50 value='test' id="wiadomosc"/><br/>
 			<button onclick="wyslijZaproszenie();">Zapos do konwersacji</button>
 			<button onclick="wyslijKasowanie();">Skasuj klucze</button>
