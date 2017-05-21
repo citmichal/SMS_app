@@ -44,16 +44,19 @@
 					var rsa = new RSAKey;           
 					alert('Robie nowy2');
 					rsa.RSAGenerate(560,10001);
+					alert('gotowe klucze');
 					localStorage.setItem(data.address + 'n', rsa.n.toString(16));
 					localStorage.setItem(data.address + 'e', rsa.e.toString());
 					localStorage.setItem(data.address + 'd', rsa.d.toString(16));
 					localStorage.setItem(data.address + 'p', rsa.p.toString(16));
 					localStorage.setItem(data.address + 'q', rsa.q.toString(16));
+					alert('jest kilka kluczy');
 					localStorage.setItem(data.address + 'dmp1', rsa.dmp1.toString(16));
 					localStorage.setItem(data.address + 'dmq1', rsa.dmq1.toString(16));
 					localStorage.setItem(data.address + 'coeff', rsa.coeff.toString(16));
+					alert('wszystkie klucze wpisane');
 				}
-					alert('gotowe');
+					alert('po IF');
 				
 				
 				
