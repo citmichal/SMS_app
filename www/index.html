@@ -31,7 +31,7 @@
             document.addEventListener('onSMSArrive', function(e){
             	var data = e.data;
             	smsList.push( data );
-				alert(JSON.stringify( data ));
+				alert('+' + data.BODY + '+');
 				
 				
             	updateStatus('SMS arrived, count: ' + smsList.length );
